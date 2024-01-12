@@ -6,9 +6,12 @@
 #include "../elastic_my/ElasticSketch.h"
 using namespace std;
 
+#ifndef START_FILE_NO
 #define START_FILE_NO 1
+#endif
+#ifndef END_FILE_NO
 #define END_FILE_NO 10
-
+#endif
 
 struct FIVE_TUPLE{	char key[13];	};
 typedef vector<FIVE_TUPLE> TRACE;
@@ -42,7 +45,9 @@ int main()
 
 #define HEAVY_MEM (150 * 1024)
 #define BUCKET_NUM (HEAVY_MEM / 64)
+#ifndef TOT_MEM_IN_BYTES
 #define TOT_MEM_IN_BYTES (600 * 1024)
+#endif
 	ElasticSketch<BUCKET_NUM, TOT_MEM_IN_BYTES> *elastic = NULL;
 
 

@@ -6,8 +6,12 @@
 #include "../CMSketch/CM.h"
 using namespace std;
 
+#ifndef START_FILE_NO
 #define START_FILE_NO 1
+#endif
+#ifndef END_FILE_NO
 #define END_FILE_NO 10
+#endif
 
 
 struct FIVE_TUPLE{	char key[13];	};
@@ -39,7 +43,9 @@ int main()
 {
 	ReadInTraces("../../data/");
 
-
+#ifndef TOT_MEM_IN_BYTES
+#define TOT_MEM_IN_BYTES (600 * 1024)
+#endif
 #define SK_D 3
 	CMSketch<4, SK_D> *cm = NULL;
 
@@ -47,7 +53,7 @@ int main()
 	for(int datafileCnt = START_FILE_NO; datafileCnt <= END_FILE_NO; ++datafileCnt)
 	{
 		unordered_map<string, int> Real_Freq;
-		cm = new CMSketch<4, SK_D>(600 * 1024);
+		cm = new CMSketch<4, SK_D>(TOT_MEM_IN_BYTES);
 
 		int packet_cnt = (int)traces[datafileCnt - 1].size();
 		for(int i = 0; i < packet_cnt; ++i)
