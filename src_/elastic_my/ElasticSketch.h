@@ -8,7 +8,9 @@
 template<int bucket_num, int tot_memory_in_bytes>
 class ElasticSketch
 {
-    static constexpr int heavy_mem = bucket_num * COUNTER_PER_BUCKET * 8;
+    static constexpr int heavy_mem = bucket_num * COUNTER_PER_BUCKET * 8; // 8 : 4B key + 4B val(vote+) //? Where are flag and vote- stored? 
+    // 7 counters are valid, and counters[7] stores vote- // ? key[7] is free?
+    // every(7) counter's highest bit means flags : need to add lignt part, and low 31bits means vote+
     static constexpr int light_mem = tot_memory_in_bytes - heavy_mem;
 
     HeavyPart<bucket_num> heavy_part;
@@ -25,8 +27,8 @@ public:
 
     void insert(uint8_t *key, int f = 1)
     {
-        uint8_t swap_key[KEY_LENGTH_4];
-        uint32_t swap_val = 0;
+        uint8_t swap_key[KEY_LENGTH_4]; // evicted key : 4Bytes
+        uint32_t swap_val = 0; // count value : 4Bytes
         int result = heavy_part.insert(key, swap_key, swap_val, f);
 
         switch(result)
@@ -39,7 +41,7 @@ public:
                     light_part.swap_insert(swap_key, swap_val);
                 return;
             }
-            case 2: light_part.insert(key, 1);  return;
+            case 2: light_part.insert(key, 1);  return; // ? why not add f?
             default:
                 printf("error return value !\n");
                 exit(1);
@@ -53,7 +55,7 @@ public:
         {
             int light_result = light_part.query(key);
             return (int)GetCounterVal(heavy_result) + light_result;
-        }
+        } 
         return heavy_result;
     }
 

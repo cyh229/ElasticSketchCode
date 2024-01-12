@@ -63,7 +63,7 @@ int main()
 			elastic->insert((uint8_t*)(traces[datafileCnt - 1][i].key));
 			// elastic->quick_insert((uint8_t*)(traces[datafileCnt - 1][i].key));
 
-			string str((const char*)(traces[datafileCnt - 1][i].key), 4);
+			string str((const char*)(traces[datafileCnt - 1][i].key), 4); // 只用前4Bytes
 			Real_Freq[str]++;
 		}
 
